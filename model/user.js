@@ -14,8 +14,8 @@ const userSchema = new Schema(
             required: true,
         },
         shapes_created: {
-            type: Int32Array,
-            required: true,
+            type: Number,
+            default: 0,
         }
     },
 

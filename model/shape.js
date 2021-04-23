@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 const shapeSchema = new Schema(
     {
         shape_id: {
-            type: Int32Array,
-            required: true,
+            type: Number,
+            default: 1,
 
         },
-        shape: {
+        shape_name: {
             type: String,
             required: true,
         },
@@ -25,4 +25,4 @@ const shapeSchema = new Schema(
 
 );
 
-module.exports = mongoose.model('User', shapeSchema);
+module.exports = mongoose.model('Shape', shapeSchema);
