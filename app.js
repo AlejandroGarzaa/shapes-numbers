@@ -3,7 +3,9 @@ const app = express();
 const mongoose = require('mongoose');
 const userRoute = require('./routes/users');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')
+const MongoStore = require('connect-mongo');
+const shapeRoute = require('./routes/shapes');
+
 
 // connect to db
 mongoose.connect('mongodb+srv://username:username@cluster0.uuu2u.mongodb.net/shapesData?retryWrites=true&w=majority',
@@ -39,14 +41,21 @@ app.use(
     })
 );
 
+
+
 // routes
 
 app.use(express.json());
 app.use('/user', userRoute);
+app.use('/shape', shapeRoute);
 
 
 // server
 app.listen(3000);
+
+
+
+
 
 
 // middlewares
