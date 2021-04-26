@@ -41,13 +41,18 @@ app.use(
     })
 );
 
+const sessionMiddleware = (req, res, next) => {
+    const user = req.session.username;
+    if (!user) res.status(401).send('Please login into your user');
+    else next();
+};
 
 
 // routes
 
 app.use(express.json());
 app.use('/user', userRoute);
-app.use('/shape', shapeRoute);
+app.use('/shape',sessionMiddleware, shapeRoute);
 
 
 // server
@@ -74,10 +79,6 @@ app.listen(3000);
 //         next();
 //     }
 // }
-// const sessionMiddleware = (req, res, next) => {
-//     const user = req.session.user;
-//     if (!user) res.status(401).send('Please login into your user');
-//     else next();
-// };
+
 
 

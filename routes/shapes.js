@@ -3,9 +3,7 @@ const router = express.Router();
 const shapeController = require('../controller/shapes');
 const session = require('express-session');
 
-
 router.use(session({ secret: 'secret', saveUninitialized: false, resave: false }));
-
 
 
 // submit shape
@@ -14,8 +12,8 @@ router.post('/create', async (req, res) => {
   try {
     const shape_name = req.body.shape_name;
     const created_by = sess.username;
-  
-    const newshape= await shapeController.create(
+
+    const newshape = await shapeController.create(
       shape_name,
       created_by
     );
@@ -26,88 +24,54 @@ router.post('/create', async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-// update message by id
+// update shape by id
 router.put('/update/:id', async (req, res) => {
   try {
-    const messageid = req.params.id;
-    const message_contents = req.body.message_contents;
-    const message = await messageController.updateMessage(
-      messageid,
-      message_contents
+    const id = req.params.id;
+    const shape_name = req.body.shape_name;
+    const modified_by = req.session.username;
+
+    const shapes = await shapeController.updateShape(
+      id,
+      shape_name,
+      modified_by
+
     );
-    res.status(200).send(message);
+    res.status(200).send(shapes);
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
+// view alll shapes by user
 
-// get messages for a certain user
-router.get('/find/:user', async (req, res) => {
+router.get('/view', async (req, res) => {
   try {
-    const user = req.params.user;
-    const messages = await messageController.listUserMessages(user);
-    return res.status(200).send(messages);
+    const currentUser = req.session.username;
+    const numShapes = await shapeController.viewAllShapes(currentUser);
+    return res.status(200).send(numShapes);
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
-
-// find messages for receiver
-router.get('/find/:receiver', async (req, res) => {
-  try {
-    const receiver = req.params.receiver;
-    const messages = await messageController.listReceiverMessages(receiver);
-    return res.status(200).send(messages);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-});
-
-
-// find messages by id
-router.get('/:id', async (req, res) => {
-  const id = req.params.id;
-  try {
-    console.log(id);
-    const messages = await messageController.getMessage(id);
-    return res.status(200).send(messages);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-});
-
-
-// delete message by id
+// delete shape by id
 router.delete('/delete/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    await messageController.deleteMessage(id);
+    await shapeController.deleteShape(id);
     return res.status(200).send('deleted');
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
-// delete all messages
-router.delete('/delete/:user', async (req, res) => {
-  try {
-    const user = req.params.user;
-    await messageController.deleteUserMessgges(user);
-    return res.status(200).send('user messages deleted');
-  } catch (error) {
-    res.status(400).send(error.messaage);
-  }
-});
+
+
+
+
+
+
+
 
 module.exports = router;
